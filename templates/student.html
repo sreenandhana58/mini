@@ -1,0 +1,51 @@
+
+{% extends "index.html" %}
+
+
+{% block content %}
+    <!-- Student Dashboard Content -->
+    <div class="container my-5">
+        <div class="text-center mb-4">
+            <h2>Welcome, {{ name }}!</h2>
+            <p class="text-muted">Manage your bus services easily with CAMP RIDE.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="fa fa-bus fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">View Routes</h5>
+                        <p class="card-text">Check your bus timings and assigned routes.</p>
+                        <a href="/view_routes" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="fa fa-clipboard-list fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Register Bus</h5>
+                        <p class="card-text">Register or update your bus service request.</p>
+                        <a href="/bus_registration" class="btn btn-primary">Register</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="fa fa-comments fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Feedback</h5>
+                        <p class="card-text">Submit feedback or complaints to admin.</p>
+                        <a href="/feedback" class="btn btn-primary">Submit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

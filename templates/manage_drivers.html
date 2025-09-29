@@ -1,0 +1,40 @@
+{% extends "index.html" %}
+{% block title %}Manage Drivers - CampRide{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">Manage Drivers</h3>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>License Number</th>
+                <th>Bus Number</th>
+                <th>Bus Route</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for driver in drivers %}
+            <tr>
+                <form action="{{ url_for('update_driver', id=driver.id) }}" method="POST">
+                    <td>{{ driver.id }}</td>
+                    <td><input type="text" name="name" value="{{ driver.name }}" class="form-control"></td>
+                    <td><input type="email" name="email" value="{{ driver.email }}" class="form-control"></td>
+                    <td><input type="text" name="phone" value="{{ driver.phone }}" class="form-control"></td>
+                    <td><input type="text" name="license_number" value="{{ driver.license_number }}" class="form-control"></td>
+                    <td><input type="text" name="bus_number" value="{{ driver.bus_number }}" class="form-control"></td>
+                    <td><input type="text" name="bus_route" value="{{ driver.bus_route }}" class="form-control"></td>
+                    <td>
+                        <button type="submit" class="btn btn-sm btn-success">Save</button>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

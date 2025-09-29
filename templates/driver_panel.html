@@ -1,0 +1,105 @@
+{% extends "index.html" %}
+{% block title %}Driver Panel - CampRide{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Welcome, {{ name }} 👋</h2>
+    <div class="row">
+        <!-- Driver Profile -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h4>Your Profile</h4>
+                <p><b>Name:</b> {{ driver.name }}</p>
+                <p><b>Email:</b> {{ driver.email }}</p>
+                <p><b>Phone:</b> {{ driver.phone }}</p>
+                <p><b>License:</b> {{ driver.license_number }}</p>
+                <p><b>Bus Number:</b> {{ driver.bus_number }}</p>
+                <p><b>Route:</b> {{ driver.bus_route }}</p>
+            </div>
+        </div>
+
+        <!-- Live Map -->
+        <div class="col-md-8">
+            <div class="card p-3">
+                <h4>Live Location & Route</h4>
+                <div id="map" style="height:400px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card p-3">
+                <h4>Students Assigned</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Pick-up Point</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.name }}</td>
+                            <td>{{ student.pickup_point }}</td>
+                            <td>{{ student.phone }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+<script>
+    const socket = io();
+
+    let map;
+    let marker;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: { lat: 0, lng: 0 }
+        });
+
+        marker = new google.maps.Marker({
+            map: map,
+            position: { lat: 0, lng: 0 },
+            title: "Your Bus Location"
+        });
+    }
+
+    socket.on('connect', () => {
+        console.log("Connected to SocketIO server");
+    });
+
+    // Receive location updates
+    socket.on('location_update', (data) => {
+        if (data.driver_id == "{{ driver.id }}") {
+            const newPos = { lat: parseFloat(data.lat), lng: parseFloat(data.lng) };
+            marker.setPosition(newPos);
+            map.setCenter(newPos);
+        }
+    });
+
+    window.onload = initMap;
+
+    // Send driver location periodically
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition((position) => {
+            socket.emit('driver_location', {
+                driver_id: "{{ driver.id }}",
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            });
+        });
+    }
+</script>
+{% endblock %}

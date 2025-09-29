@@ -1,0 +1,51 @@
+{% extends "index.html" %}
+
+{% block title %}Driver - CampRide{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-center">Add Driver & Bus Information</h3>
+    <form action="{{ url_for('driver_bus') }}" method="POST" class="p-4 shadow bg-white rounded">
+
+        <!-- Driver Information -->
+        <h5 class="mb-3">Driver Information</h5>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="driverName" class="form-label">Driver Name</label>
+                <input type="text" class="form-control" id="driverName" name="driverName" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="driverEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="driverEmail" name="driverEmail" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="driverPhone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="driverPhone" name="driverPhone" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="driverLicense" class="form-label">License Number</label>
+                <input type="text" class="form-control" id="driverLicense" name="driverLicense" required>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Bus Information -->
+        <h5 class="mb-3">Bus Information</h5>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="busNumber" class="form-label">Bus Number</label>
+                <input type="text" class="form-control" id="busNumber" name="busNumber" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="busRoute" class="form-label">Route Name</label>
+                <input type="text" class="form-control" id="busRoute" name="busRoute" required>
+            </div>
+            
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Add Driver & Bus</button>
+    </form>
+</div>
+{% endblock %}
+
