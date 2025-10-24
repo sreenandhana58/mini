@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+{% block title %}Routes{% endblock %}
+
+{% block content %}
+  <h2>Available Routes</h2>
+
+  {% if routes %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Route No</th>
+            <th>Route Name</th>
+            <th>Starting Point</th>
+            <th>Destination</th>
+            <th>Stops Covered</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Driver</th>
+            <th>Contact</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in routes %}
+            <tr>
+              <td>{{ r.route_no }}</td>
+              <td>{{ r.route_name }}</td>
+              <td>{{ r.starting_point }}</td>
+              <td>{{ r.destination }}</td>
+              <td style="max-width: 220px; white-space: pre-wrap;">{{ r.stops_covered }}</td>
+              <td>{{ r.departure_time or '-' }}</td>
+              <td>{{ r.arrival_time or '-' }}</td>
+              <td>{{ r.driver or '-' }}</td>
+              <td>{{ r.contact or '-' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No routes available yet.</div>
+  {% endif %}
+{% endblock %}

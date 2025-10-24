@@ -10,6 +10,8 @@
     <meta content="Free HTML Templates" name="description">
 
     <!-- Favicon -->
+     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
     <link href="img/favicon.ico" rel="icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -69,7 +71,8 @@
                     <h4 class="fa fa-map-marker-alt text-primary"></h4>
                     <div class="pl-3">
                         <h5 class="text-white">Address</h5>
-                        <p>KMCT, Mampara, Pazhur.PO, Kuttippuram,Malappuram,Pin:679571,Kerala</p>
+                        <p>KMCT, Mampara, Pazhur.PO, Kuttippuram,Malappuram,
+                            <br>Pin:679571,Kerala</p>
                     </div>
                 </div>
                 <div class="d-flex">
@@ -141,9 +144,13 @@
     <!-- Contact Javascript File -->
     <script src="mail/jqBootstrapValidation.min.js"></script>
     <script src="mail/contact.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+        <script src="js/script.js"></script>
+
 </body>
 
 </html>

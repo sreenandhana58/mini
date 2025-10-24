@@ -3,6 +3,35 @@
 {% block title %}Contact Us - CampRide{% endblock %}
 
 {% block content %}
+<div class="container-fluid bg-light position-relative shadow">
+        <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0 px-lg-5">
+            <a href="" class="navbar-brand font-weight-bold text-secondary" style="font-size: 50px;">
+                <i class="flaticon-043-teddy-bear"></i>
+                <span class="text-primary">CAMP RIDE</span>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav font-weight-bold mx-auto py-0">
+                    <a href="{{ url_for('home') }}" class="nav-item nav-link active">Home</a>
+                    <!-- <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            <a href="blog.html" class="dropdown-item">Blog Grid</a>
+                            <a href="single.html" class="dropdown-item">Blog Detail</a>
+                        </div>
+                    </div> -->
+                    <a href="{{ url_for('contact') }}" class="nav-item nav-link">Contact</a>
+                </div>
+                <a href="{{ url_for('login') }}" class="btn btn-primary px-4">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary px-4">Sign In</a>
+
+
+            </div>
+        </nav>
+    </div>
+
 <div class="card d-flex m-5" style="max-width: 800px; text-align: left;">
     <h2>Contact Us</h2>
     <p>If you have any questions, feedback, or need support with CampRide, feel free to reach out to us.</p>
@@ -22,7 +51,7 @@
     <div style="margin-top: 20px;">
         <h3>Find Us Here</h3>
         <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3936.777777369034!2d76.0499!3d10.9946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7b1c4df8b5ad5%3A0x1111abcd12345678!2sKMCT%20Institute%20of%20Technology%20and%20Management!5e0!3m2!1sen!2sin!4v1694163099550!5m2!1sen!2sin" 
+            src="https://maps.google.com/maps?q=10.879982400493235,76.03332191065621&t=&z=13&ie=UTF8&iwloc=&output=embed"
             width="100%" 
             height="300" 
             style="border:0; border-radius: 8px;" 

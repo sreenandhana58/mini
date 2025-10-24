@@ -1,0 +1,98 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="container-fluid py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mx-auto">
+        <div class="card border-0 shadow-lg">
+          <div class="card-header bg-secondary text-center p-4">
+            <h1 class="text-white m-0">Bus Registration Form</h1>
+          </div>
+          <div class="card-body rounded-bottom bg-primary p-5">
+            <form action="{{ url_for('bus_register') }}" method="POST">
+
+              <!-- Student Name -->
+              <div class="form-group mb-3">
+                <input type="text" class="form-control border-0 p-3" name="name" placeholder="Your Name" required />
+              </div>
+
+              <!-- Register Number -->
+              <div class="form-group mb-3">
+                <input type="text" class="form-control border-0 p-3" name="register_number" placeholder="Register Number" required />
+              </div>
+
+              <!-- Department -->
+              <div class="form-group mb-3">
+                <input type="text" class="form-control border-0 p-3" name="department" placeholder="Department" required />
+              </div>
+
+              <!-- Year -->
+              <div class="form-group mb-3">
+                <select class="custom-select border-0 px-3" name="year" style="height: 47px;" required>
+                  <option value="">Select Year</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+
+                </select>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group mb-3">
+                <input type="email" class="form-control border-0 p-3" name="email" placeholder="Your Email" required />
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group mb-3">
+                <input type="tel" class="form-control border-0 p-3" name="phone" placeholder="Your Phone Number" required />
+              </div>
+
+              <!-- Address (Text Area) -->
+              <div class="form-group mb-3">
+                <textarea class="form-control border-0 p-3" name="address" placeholder="Your Address" rows="3" required></textarea>
+              </div>
+              <div class="form-group mb-4">
+    <label for="bus_route" class="form-label visually-hidden">Select Route</label>
+    <select class="custom-select border-0 px-3" name="bus_route" id="bus_route" style="height: 47px;" required>
+        <option value="" disabled selected>-- Select Bus Route --</option>
+        
+        {% for route in routes %}
+        <option value="{{ route }}">{{ route }}</option>
+        {% endfor %}
+        
+    </select>
+</div>
+<div class="form-group mb-3">
+    <label for="pickup_point" class="form-label visually-hidden">Nearest Bus Stop</label>
+    <select class="form-control border-0 p-3" name="pickup_point" id="pickup_point" required>
+        <option value="" disabled selected>-- Select Nearest Bus Stop --</option>
+        
+        {% for stop in pickup_points %}
+        <option value="{{ stop }}">{{ stop }}</option>
+        {% endfor %}
+        
+    </select>
+</div>
+
+
+
+
+
+              <!-- Submit Button -->
+              <div>
+                <button class="btn btn-secondary btn-block border-0 py-3" type="submit">
+                  Register
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

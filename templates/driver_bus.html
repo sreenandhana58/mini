@@ -37,10 +37,17 @@
                 <label for="busNumber" class="form-label">Bus Number</label>
                 <input type="text" class="form-control" id="busNumber" name="busNumber" required>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="busRoute" class="form-label">Route Name</label>
-                <input type="text" class="form-control" id="busRoute" name="busRoute" required>
-            </div>
+           <div class="col-md-6 mb-3">
+    <label for="busRoute" class="form-label">Route Name</label>
+    <select class="form-control" id="busRoute" name="busRoute" required>
+        <option value="" disabled selected>-- Select Bus Route --</option>
+        
+        {% for route in route_names %}
+        <option value="{{ route }}">{{ route }}</option>
+        {% endfor %}
+        
+    </select>
+</div>
             
         </div>
 

@@ -1,0 +1,67 @@
+{% extends "index.html" %}
+{% block title %}Add Route{% endblock %}
+
+{% block content %}
+<div class="col-12 bg-dark text-white p-3 mb-4">
+            <div class="d-flex justify-content-around">
+                <a href="{{ url_for('manage_students') }}" class="text-white"><i class="fas fa-user-graduate"></i> Manage Students</a>
+                <a href="{{ url_for('manage_drivers') }}" class="text-white"><i class="fas fa-bus"></i> Manage Drivers</a>
+                <a href="{{ url_for('manage_routes') }}" class="text-white"><i class="fas fa-route"></i> Bus Routes</a>
+                <a href="{{ url_for('view_feedbacks') }}" class="text-white"><i class="fas fa-comments"></i> View Feedbacks</a>
+                <a href="{{ url_for('logout') }}" class="text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+  <h2>Add Route</h2>
+
+  <form method="post" class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Route No *</label>
+      <input name="route_no" class="form-control" required>
+    </div>
+
+    <div class="col-md-8">
+      <label class="form-label">Route Name *</label>
+      <input name="route_name" class="form-control" required>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Starting Point *</label>
+      <input name="starting_point" class="form-control" required>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Destination *</label>
+      <input name="destination" class="form-control" required>
+    </div>
+
+    <div class="col-12">
+      <label class="form-label">Stops Covered</label>
+      <textarea name="stops_covered" class="form-control" rows="2" placeholder="Comma separated stops"></textarea>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Departure (time)</label>
+      <input type="time" name="departure_time" class="form-control">
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Arrival (time)</label>
+      <input type="time" name="arrival_time" class="form-control">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Driver</label>
+      <input name="driver" class="form-control">
+    </div>
+
+    <div class="col-md-2">
+      <label class="form-label">Contact</label>
+      <input name="contact" class="form-control" type="tel">
+    </div>
+
+    <div class="col-12">
+      <button class="btn btn-primary" type="submit">Save Route</button>
+      <a class="btn btn-secondary" href="{{ url_for('view_routes') }}">View Routes</a>
+    </div>
+  </form>
+{% endblock %}

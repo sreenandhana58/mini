@@ -1,51 +1,165 @@
-
 {% extends "index.html" %}
 
-
 {% block content %}
-    <!-- Student Dashboard Content -->
-    <div class="container my-5">
-        <div class="text-center mb-4">
-            <h2>Welcome, {{ name }}!</h2>
-            <p class="text-muted">Manage your bus services easily with CAMP RIDE.</p>
+<!-- Student Dashboard Content -->
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h2>Welcome, {{ name }}!</h2>
+        <p class="text-muted">Manage your bus services easily with CAMP RIDE.</p>
+        {% if student_status == 'pending' %}
+        <div class="alert alert-warning" role="alert">
+            Your bus registration is pending approval from the driver. The live location will be available once approved.
+        </div>
+        {% elif student_status == 'unregistered' %}
+        <div class="alert alert-info" role="alert">
+            You have not registered for the bus service yet. Please register to see bus details.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Driver Details Card (only shown if approved) -->
+    {% if student_status == 'approved' and driver %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Your Driver's Details</h5>
+                </div>
+                <div class="card-body" style="min-height: auto;">
+                    <p><strong>Driver Name:</strong> {{ driver.name }}</p>
+                    <p><strong>Contact:</strong> {{ driver.phone }}</p>
+                    <p><strong>Bus Number:</strong> {{ driver.bus_number }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Cards Section -->
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 text-center h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="fa fa-bus fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">View Routes</h5>
+                    <p class="card-text">Check your bus timings and assigned routes.</p>
+                    <a href="{{ url_for('view_routes') }}" class="btn btn-primary mt-auto">View</a>
+                </div>
+            </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body text-center">
-                        <i class="fa fa-bus fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">View Routes</h5>
-                        <p class="card-text">Check your bus timings and assigned routes.</p>
-                        <a href="/view_routes" class="btn btn-primary">View</a>
-                    </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 text-center h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="fa fa-credit-card fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Make Payment</h5>
+                    <p class="card-text">Pay for your selected bus route.</p>
+                    <a href="{{ url_for('payment') }}" class="btn btn-primary mt-auto">Pay</a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body text-center">
-                        <i class="fa fa-clipboard-list fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">Register Bus</h5>
-                        <p class="card-text">Register or update your bus service request.</p>
-                        <a href="/bus_registration" class="btn btn-primary">Register</a>
-                    </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 text-center h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="fa fa-clipboard-list fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Register Bus</h5>
+                    <p class="card-text">Register or update your bus service request.</p>
+                    <a href="{{ url_for('bus_registration') }}" class="btn btn-primary mt-auto">Register</a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body text-center">
-                        <i class="fa fa-comments fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">Feedback</h5>
-                        <p class="card-text">Submit feedback or complaints to admin.</p>
-                        <a href="/feedback" class="btn btn-primary">Submit</a>
-                    </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 text-center h-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="fa fa-comments fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Feedback</h5>
+                    <p class="card-text">Submit feedback or complaints to the admin.</p>
+                    <a href="{{ url_for('feedback') }}" class="btn btn-primary mt-auto">Submit</a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Live Location Section -->
+    <div class="row mt-5" id="location-container" style="display: none;">
+        <div class="col-md-12">
+            <div class="card p-3">
+                <h4>Driver Live Location</h4>
+                <div id="map" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Custom Styles for Equal Cards -->
+<style>
+    .card {
+        min-height: 320px;
+        border-radius: 15px;
+    }
+    .card-body i {
+        color: #007bff;
+    }
+    .card-title {
+        font-weight: 600;
+    }
+</style>
 
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Socket.IO -->
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+
+<script>
+    // Only run the map script if the student is approved and has a driver assigned.
+    {% if student_status == 'approved' and driver_id %}
+        const socket = io();
+        const locationContainer = document.getElementById('location-container');
+        const driverId = "{{ driver_id }}";
+
+        // Show the map container only if the driver is actively sharing
+        if ("{{ is_sharing }}" === "True") {
+            locationContainer.style.display = 'block';
+        } else {
+            locationContainer.style.display = 'block'; // Make the container visible
+            locationContainer.innerHTML = '<div class="alert alert-info text-center">The driver is not currently sharing their location.</div>';
+        }
+
+        // Initialize the map only if the driver is sharing
+        var map = L.map('map').setView([{{ driver_lat | tojson }}, {{ driver_lng | tojson }}], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var marker = L.marker([{{ driver_lat }}, {{ driver_lng }}]).addTo(map).bindPopup("Driver Location");
+
+        socket.on('connect', () => {
+            console.log("Connected to server. Joining room for driver:", driverId);
+            // Join the specific driver's room to receive location updates
+            socket.emit("join_room", { "driver_id": driverId });
+        });
+
+        // Listen for location updates from the server
+        socket.on("location_update", (data) => {
+            if (data.driver_id == driverId) {
+                const lat = parseFloat(data.lat);
+                const lng = parseFloat(data.lng);
+                marker.setLatLng([lat, lng]);
+                map.setView([lat, lng], 15);
+            }
+        });
+
+        // Listen for when the driver stops sharing their location
+        socket.on("location_stop", (data) => {
+            if (data.driver_id == driverId) {
+                // Hide the entire location container
+                locationContainer.innerHTML = '<div class="alert alert-info text-center">The driver has stopped sharing their location.</div>';
+            }
+        });
+    {% endif %}
+</script>
 {% endblock %}

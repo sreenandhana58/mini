@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+
+{% block title %}Feedbacks{% endblock %}
+
+{% block content %}
+<div class="col-12 bg-dark text-white p-3 mb-4">
+            <div class="d-flex justify-content-around">
+                <a href="{{ url_for('manage_students') }}" class="text-white"><i class="fas fa-user-graduate"></i> Manage Students</a>
+                <a href="{{ url_for('manage_drivers') }}" class="text-white"><i class="fas fa-bus"></i> Manage Drivers</a>
+                <a href="{{ url_for('manage_routes') }}" class="text-white"><i class="fas fa-route"></i> Bus Routes</a>
+                <a href="{{ url_for('view_feedbacks') }}" class="text-white"><i class="fas fa-comments"></i> View Feedbacks</a>
+                <a href="{{ url_for('logout') }}" class="text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+
+<h2>Received Feedbacks</h2>
+
+
+{% if feedbacks %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in feedbacks %}
+                    <tr>
+                        <td>{{ feedback.name }}</td>
+                        <td>{{ feedback.email }}</td>
+                        <td>{{ feedback.message }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">No feedback available.</div>
+{% endif %}
+
+{% endblock %}

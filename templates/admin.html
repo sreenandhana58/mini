@@ -15,13 +15,13 @@
             <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                 <div class="navbar-nav font-weight-bold mx-auto py-0">
                     <a href="{{ url_for('home') }}" class="nav-item nav-link active">Home</a>
-                    <div class="nav-item dropdown">
+                    <!-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu rounded-0 m-0">
                             <a href="blog.html" class="dropdown-item">Blog Grid</a>
                             <a href="single.html" class="dropdown-item">Blog Detail</a>
                         </div>
-                    </div>
+                    </div> -->
                     <a href="{{ url_for('contact') }}" class="nav-item nav-link">Contact</a>
                 </div>
                 <!-- <a href="{{ url_for('login') }}" class="btn btn-primary px-4">Login</a> -->
@@ -31,20 +31,20 @@
             </div>
         </nav>
     </div>
-<div class="col-md-3 col-lg-2 sidebar">
-            <h3 class="text-center">Admin Panel</h3>
-            <hr style="background:white;">
-            <a href="#"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="#"><i class="fas fa-user-graduate"></i> Manage Students</a>
-            <a href="#"><i class="fas fa-bus"></i> Manage Drivers</a>
-            <a href="#"><i class="fas fa-route"></i> Bus Routes</a>
-            <a href="#"><i class="fas fa-rupee-sign"></i> Fees</a>
-            <a href="#"><i class="fas fa-cogs"></i> Settings</a>
-            <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 bg-dark text-white p-3 mb-4">
+            <div class="d-flex justify-content-around">
+                <a href="{{ url_for('manage_students') }}" class="text-white"><i class="fas fa-user-graduate"></i> Manage Students</a>
+                <a href="{{ url_for('manage_drivers') }}" class="text-white"><i class="fas fa-bus"></i> Manage Drivers</a>
+                <a href="{{ url_for('manage_routes') }}" class="text-white"><i class="fas fa-route"></i> Bus Routes</a>
+                <a href="{{ url_for('view_feedbacks') }}" class="text-white"><i class="fas fa-comments"></i> View Feedbacks</a>
+                <a href="{{ url_for('logout') }}" class="text-white"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 content">
+        <div class="col-12 content">
             <h2>Welcome, {{ name }} 👋</h2>
             <p class="text-muted">This is your CampRide Admin Dashboard.</p>
 
@@ -54,7 +54,7 @@
                         <i class="fas fa-user-graduate fa-3x text-primary"></i>
                         <h4 class="mt-2">Students</h4>
                         <p>View and manage student accounts</p>
-                        <a href="#" class="btn btn-sm btn-primary">Manage</a>
+                        <a href="{{ url_for('manage_students') }}" class="btn btn-sm btn-primary">Manage</a>
                     </div>
                 </div>
 
@@ -72,20 +72,21 @@
                         <i class="fas fa-route fa-3x text-warning"></i>
                         <h4 class="mt-2">Routes</h4>
                         <p>Update and manage bus routes</p>
-                        <a href="#" class="btn btn-sm btn-warning">Manage</a>
+                        <a href="{{ url_for('manage_routes') }}" class="btn btn-sm btn-warning">Manage</a>
                     </div>
                 </div>
-                <div class="col-md-4 mt-4">
+                
+                 <div class="col-md-4">
                     <div class="card shadow text-center p-3">
-                        <i class="fas fa-chalkboard-teacher fa-3x text-info"></i>
-                        <h4 class="mt-2">Faculty</h4>
-                        <p>View and manage faculty members</p>
-                        <a href="#" class="btn btn-sm btn-info">Manage</a>
+                        <i class="fas fa-comments fa-3x text-info"></i>
+                        <h4 class="mt-2">View Feedbacks</h4>
+                        <p>See what students are saying</p>
+                        <a href="{{ url_for('view_feedbacks') }}" class="btn btn-sm btn-info">View</a>
                     </div>
                 </div>
+
 
             </div>
-
         </div>
     </div>
 </div>

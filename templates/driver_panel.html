@@ -15,6 +15,7 @@
                 <p><b>License:</b> {{ driver.license_number }}</p>
                 <p><b>Bus Number:</b> {{ driver.bus_number }}</p>
                 <p><b>Route:</b> {{ driver.bus_route }}</p>
+                <button class="btn btn-secondary mt-2" data-toggle="modal" data-target="#editDriverModal">Edit Details</button>
             </div>
         </div>
 
@@ -23,6 +24,7 @@
             <div class="card p-3">
                 <h4>Live Location & Route</h4>
                 <div id="map" style="height:400px;"></div>
+                <button id="shareLocationBtn" class="btn btn-primary mt-3">Share Location</button>
             </div>
         </div>
     </div>
@@ -36,16 +38,35 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Status</th>
                             <th>Pick-up Point</th>
                             <th>Contact</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for student in students %}
                         <tr>
                             <td>{{ student.name }}</td>
+                            <td>
+                                {% if student.status == 'approved' %}
+                                    <span class="badge badge-success">Approved</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Pending</span>
+                                {% endif %}
+                            </td>
                             <td>{{ student.pickup_point }}</td>
                             <td>{{ student.phone }}</td>
+                            <td>
+                                {% if student.status == 'pending' %}
+                                <form action="{{ url_for('approve_student', id=student.id) }}" method="POST" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                </form>
+                                <form action="{{ url_for('reject_student', id=student.id) }}" method="POST" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                </form>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -55,51 +76,144 @@
     </div>
 </div>
 
+<!-- Edit Driver Modal -->
+<div class="modal fade" id="editDriverModal" tabindex="-1" role="dialog" aria-labelledby="editDriverModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editDriverModalLabel">Edit Your Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ url_for('edit_driver_details') }}" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" name="name" value="{{ driver.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" class="form-control" name="phone" value="{{ driver.phone }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="license_number">License Number</label>
+                        <input type="text" class="form-control" name="license_number" value="{{ driver.license_number }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bus_number">Bus Number</label>
+                        <input type="text" class="form-control" name="bus_number" value="{{ driver.bus_number }}" required>
+                    </div>
+                    <!-- The bus route is assigned by admin, so it's not editable by the driver here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Socket.IO -->
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+
 <script>
     const socket = io();
 
-    let map;
-    let marker;
+    let sharing = false;
+    let watchId = null;
 
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center: { lat: 0, lng: 0 }
-        });
+    // Initialize Leaflet map
+    var map = L.map('map').setView([
+        {{ driver_lat | tojson }},
+        {{ driver_lng | tojson }}
+    ], 13);
 
-        marker = new google.maps.Marker({
-            map: map,
-            position: { lat: 0, lng: 0 },
-            title: "Your Bus Location"
-        });
-    }
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker = L.marker([{{ driver_lat }}, {{ driver_lng }}]).addTo(map)
+        .bindPopup("Your Location")
+        .openPopup();
+
+    // Join the driver's own room to see live updates on their map
+    socket.emit("join_room", { driver_id: "{{ driver.id }}" });
 
     socket.on('connect', () => {
         console.log("Connected to SocketIO server");
     });
 
-    // Receive location updates
+    // Receive location updates from server
     socket.on('location_update', (data) => {
         if (data.driver_id == "{{ driver.id }}") {
-            const newPos = { lat: parseFloat(data.lat), lng: parseFloat(data.lng) };
-            marker.setPosition(newPos);
-            map.setCenter(newPos);
+            const lat = parseFloat(data.lat);
+            const lng = parseFloat(data.lng);
+
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 15);
         }
     });
 
-    window.onload = initMap;
+    // Share location button logic
+    document.getElementById("shareLocationBtn").addEventListener("click", () => {
+        sharing = !sharing;
 
-    // Send driver location periodically
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition((position) => {
-            socket.emit('driver_location', {
-                driver_id: "{{ driver.id }}",
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            });
-        });
+        if (sharing) {
+            sessionStorage.setItem('isSharingLocation', 'true'); // Store state
+            document.getElementById("shareLocationBtn").innerText = "Stop Sharing";
+            startSharingLocation();
+        } else {
+            sessionStorage.removeItem('isSharingLocation'); // Clear state
+            document.getElementById("shareLocationBtn").innerText = "Share Location";
+            stopSharingLocation();
+        }
+    });
+
+    function startSharingLocation() {
+        if (navigator.geolocation) {
+            watchId = navigator.geolocation.watchPosition((position) => {
+                socket.emit('driver_location', {
+                    driver_id: "{{ driver.id }}",
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+            }, (err) => console.error(err), { enableHighAccuracy: true });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
     }
+
+    function stopSharingLocation() {
+        if (navigator.geolocation && watchId) {
+            navigator.geolocation.clearWatch(watchId);
+            watchId = null;
+            socket.emit('stop_location_sharing', { driver_id: "{{ driver.id }}" });
+        }
+    }
+
+    // Get current location on page load and center the map
+    window.addEventListener('load', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                marker.setLatLng([lat, lng]);
+                map.setView([lat, lng], 15); // Center map on current location
+            });
+        }
+
+        // Check sessionStorage to restore sharing state on page load
+        if (sessionStorage.getItem('isSharingLocation') === 'true') {
+            sharing = true;
+            document.getElementById("shareLocationBtn").innerText = "Stop Sharing";
+            startSharingLocation();
+        }
+    });
 </script>
 {% endblock %}
