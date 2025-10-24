@@ -135,7 +135,7 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        var marker = L.marker([{{ driver_lat }}, {{ driver_lng }}]).addTo(map).bindPopup("Driver Location");
+        var marker = L.marker([{{ driver_lat | tojson }}, {{ driver_lng | tojson }}]).addTo(map).bindPopup("Driver Location");
 
         socket.on('connect', () => {
             console.log("Connected to server. Joining room for driver:", driverId);

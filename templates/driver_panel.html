@@ -138,7 +138,7 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    var marker = L.marker([{{ driver_lat }}, {{ driver_lng }}]).addTo(map)
+    var marker = L.marker([{{ driver_lat | tojson }}, {{ driver_lng | tojson }}]).addTo(map)
         .bindPopup("Your Location")
         .openPopup();
 
